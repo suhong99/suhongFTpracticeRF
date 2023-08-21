@@ -1,46 +1,42 @@
-import axios from "../api/axios";
-import React, { useCallback, useEffect, useState } from "react";
-import "./Row.css";
-import MovieModal from "./MovieModal";
+import axios from '../api/axios';
+import React, { useCallback, useEffect, useState } from 'react';
+import './Row.css';
+import MovieModal from './MovieModal';
 
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 // import swiper style
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/scrollbar";
-import "swiper/css/pagination";
-import styled from "styled-components";
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/scrollbar';
+import 'swiper/css/pagination';
+import styled from 'styled-components';
 
 const Row = ({ title, id, fetchUrl }) => {
   const [movies, setMovies] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [movieSelected, setMovieSelection] = useState({});
 
-  console.log("랜더링 확인");
+  // console.log('랜더링 확인');
   // const fetchMovieData = async () => {
-  //   console.log("랜더링 확인 함수안");
+  //   console.log('랜더링 확인 함수안');
 
   //   const response = await axios.get(fetchUrl);
-  //   console.log("response", response);
+  //   console.log('response', response);
   //   setMovies(response.data.result);
   // };
   const fetchMovieData = useCallback(async () => {
     const response = await axios.get(fetchUrl);
-    console.log("랜더링 확인 함수안");
+    // console.log('랜더링 확인 함수안');
     console.log(response);
     setMovies(response.data.results);
   }, [fetchUrl]);
 
+  console.log(movies);
   useEffect(() => {
     fetchMovieData();
   }, [fetchMovieData]);
-
-  // console.log(movies);
-  // useEffect(() => {
-  //   fetchMovieData();
-  // }, [fetchMovieData]);
 
   // useEffect(() => {
   //   const fetchMovieData = async () => {
@@ -102,7 +98,9 @@ const Row = ({ title, id, fetchUrl }) => {
         </Content>
       </Swiper>
 
-      {modalOpen && <MovieModal {...movieSelected} setModalOpen={setModalOpen} />}
+      {modalOpen && (
+        <MovieModal {...movieSelected} setModalOpen={setModalOpen} />
+      )}
     </Container>
   );
 };
@@ -120,12 +118,8 @@ const Wrap = styled.div`
   height: 95%;
   padding-top: 56.25%;
   border-radius: 10px;
-  box-shadow: rgb(0 0 0/69%) 0px 26px 30px -10px;
-    rgb(0 0 0/73%) 0px 16px 10px -10px;
-  cursor: pointer;
-  overflow: hidden;
-  position: relative;
-  transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
+  box-shadow: rgb(0 0 0/69%) 0px 26px 30px -10px,
+    0ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
   border: 3px solid rgba(249, 249, 249, 0.1);
 
   img {
