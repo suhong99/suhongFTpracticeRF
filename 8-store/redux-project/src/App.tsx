@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from 'react';
-import './App.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './reducers';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import "./App.css";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "./reducers";
+import axios from "axios";
 
 type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,7 +16,7 @@ function App({ onIncrement, onDecrement }: Props) {
   const counter = useSelector((state: RootState) => state.counter);
   const todos: string[] = useSelector((state: RootState) => state.todos);
   const posts = useSelector((state: RootState) => state.posts);
-  const [todoValue, setTodoValue] = useState<string>('');
+  const [todoValue, setTodoValue] = useState<string>("");
 
   useEffect(() => {
     dispatch(fetchPosts());
@@ -26,10 +26,8 @@ function App({ onIncrement, onDecrement }: Props) {
   const fetchPosts = (): any => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return async function fetchPostsThunk(dispatch: any, getState: any) {
-      const response = await axios.get(
-        'https://jsonplaceholder.typicode.com/posts'
-      );
-      dispatch({ type: 'FETCH_POSTS', payload: response.data });
+      const response = await axios.get("https://jsonplaceholder.typicode.com/posts");
+      dispatch({ type: "FETCH_POSTS", payload: response.data });
     };
   };
 
@@ -39,9 +37,9 @@ function App({ onIncrement, onDecrement }: Props) {
 
   const addTodo = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch({ type: 'ADD_TODO', text: todoValue });
+    dispatch({ type: "ADD_TODO", text: todoValue });
 
-    setTodoValue('');
+    setTodoValue("");
   };
   return (
     <>
