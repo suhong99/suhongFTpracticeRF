@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
 import { fetchCount } from './counterAPI';
+import axios from 'axios';
 
 export interface CounterState {
   value: number;
@@ -23,6 +24,19 @@ export const incrementAsync = createAsyncThunk(
     const response = await fetchCount(amount);
     // The value we return becomes the `fulfilled` action payload
     return response.data;
+  }
+);
+
+export const fetchUsersAsync = createAsyncThunk(
+  'counter/fetchUsers',
+  async (_, { signal }) => {
+    const controller = new AbortController();
+    signal.addEventListener('abort', () => {
+      controller.abort();
+    });
+    await axios.get('https://jsonplaceholder.typicode.com/users', {
+      signal: controller.signal,
+    });
   }
 );
 
