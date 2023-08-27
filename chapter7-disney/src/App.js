@@ -1,11 +1,11 @@
-import "./App.css";
-import React from "react";
-import { Outlet, Route, Routes } from "react-router-dom";
-import Nav from "./components/Nav";
-import LoginPage from "./pages/LoginPage";
-import MainPage from "./pages/MainPage";
-import DatailPage from "./pages/DetailPage";
-import SearchPage from "./pages/SearchPage";
+import './App.css';
+import React from 'react';
+import { Outlet, Route, Routes } from 'react-router-dom';
+import Nav from './components/Nav';
+import LoginPage from './pages/LoginPage';
+import MainPage from './pages/MainPage';
+import DatailPage from './pages/DetailPage';
+import SearchPage from './pages/SearchPage';
 const Layout = () => {
   return (
     <div>
