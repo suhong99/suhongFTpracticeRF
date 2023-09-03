@@ -1,37 +1,80 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { useEffect, useRef, useState } from 'react';
+import {
+  loadPaymentWidget,
+  PaymentWidgetInstance,
+} from '@tosspayments/payment-widget-sdk';
+import '../App.css';
+import { nanoid } from 'nanoid';
+const clientKey = 'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq';
+const customerKey = 'YbX2HuSlsC9uVJW6NMRMj';
 
-import { useEffect, useRef } from "react";
-import { loadPaymentWidget, PaymentWidgetInstance } from "@tosspayments/payment-widget-sdk";
-import { ANONYMOUS } from "@tosspayments/payment-widget-sdk";
+export default function App() {
+  const paymentWidgetRef = useRef<PaymentWidgetInstance | null>(null);
+  const paymentMethodsWidgetRef = useRef<ReturnType<
+    PaymentWidgetInstance['renderPaymentMethods']
+  > | null>(null);
+  const [price, setPrice] = useState(50_000);
 
-function CheckoutPage() {
-  const [count, setCount] = useState(0);
-  const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
-  const customerKey = "YbX2HuSlsC9uVJW6NMRMj";
+  useEffect(() => {
+    (async () => {
+      const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
+
+      const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
+        '#payment-widget',
+        price
+      );
+
+      paymentWidgetRef.current = paymentWidget;
+      paymentMethodsWidgetRef.current = paymentMethodsWidget;
+    })();
+  }, []);
+
+  useEffect(() => {
+    const paymentMethodsWidget = paymentMethodsWidgetRef.current;
+
+    if (paymentMethodsWidget == null) {
+      return;
+    }
+
+    paymentMethodsWidget.updateAmount(
+      price,
+      paymentMethodsWidget.UPDATE_REASON.COUPON
+    );
+  }, [price]);
 
   return (
-    <>
+    <div>
+      <h1>주문서</h1>
+      <div id="payment-widget" />
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <input
+          type="checkbox"
+          onChange={(event) => {
+            setPrice(event.target.checked ? price - 5_000 : price + 5_000);
+          }}
+        />
+        <label>5,000원 할인 쿠폰 적용</label>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+      <button
+        onClick={async () => {
+          const paymentWidget = paymentWidgetRef.current;
+
+          try {
+            await paymentWidget?.requestPayment({
+              orderId: nanoid(),
+              orderName: '토스 티셔츠 외 2건',
+              customerName: '김토스',
+              customerEmail: 'customer123@gmail.com',
+              successUrl: `${window.location.origin}/success`,
+              failUrl: `${window.location.origin}/fail`,
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        }}
+      >
+        결제하기
+      </button>
+    </div>
   );
 }
-
-export default CheckoutPage;
