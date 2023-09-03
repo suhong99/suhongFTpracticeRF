@@ -1,14 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import CheckoutPage from './pages/Checkout';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { SuccessPage } from './pages/Success';
-import { FailPage } from './pages/Fail';
-
+import App from './App.tsx';
+import './index.css';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import CheckOutPage from './pages/Checkout.tsx';
+import { SuccessPage } from './pages/Success.tsx';
+import { FailPage } from './pages/Fail.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <CheckoutPage />,
+    element: <App />,
+  },
+  {
+    path: '/payment',
+    element: <CheckOutPage />,
   },
   {
     path: '/success',
